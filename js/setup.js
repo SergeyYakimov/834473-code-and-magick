@@ -33,6 +33,8 @@ var openPopup = function () {
 };
 var closePopup = function () {
   userDialog.classList.add('hidden');
+  userDialog.style.top = '';
+  userDialog.style.left = '';
   document.removeEventListener('keydown', escPressHandler);
 };
 
