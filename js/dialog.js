@@ -1,6 +1,7 @@
 'use strict';
 
 (function () {
+  var userDialog = document.querySelector('.setup');
   var dialogHandle = userDialog.querySelector('.upload');
 
   dialogHandle.addEventListener('mousedown', function (evt) {
@@ -37,8 +38,8 @@
       document.removeEventListener('mouseup', dialogHandleMouseUpHandler);
 
       if (dragged) {
-        var dialogHandleClickPreventDefault = function (evt) {
-          evt.preventDefault();
+        var dialogHandleClickPreventDefault = function (dragEvt) {
+          dragEvt.preventDefault();
           dialogHandle.removeEventListener('click', dialogHandleClickPreventDefault);
         };
         dialogHandle.addEventListener('click', dialogHandleClickPreventDefault);
