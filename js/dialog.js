@@ -1,52 +1,27 @@
 'use strict';
 
 (function () {
-  var userDialog = document.querySelector('.setup');
-  var dialogHandle = userDialog.querySelector('.upload');
+  var setupOpen = document.querySelector('.setup-open');
+  var setupClose = window.util.userDialog.querySelector('.setup-close');
 
-  dialogHandle.addEventListener('mousedown', function (evt) {
-    evt.preventDefault();
+  var openPopup = function () {
+    window.util.userDialog.classList.remove('hidden');
+    document.addEventListener('keydown', window.util.isEscEvent);
+  };
 
-    var startCoords = {
-      x: evt.clientX,
-      y: evt.clientY
-    };
+  setupOpen.addEventListener('click', function () {
+    openPopup();
+  });
 
-    var dragged = false;
+  setupOpen.addEventListener('keydown', function (evt) {
+    window.util.isEnterEvent(evt, openPopup);
+  });
 
-    var dialogHandleMouseMoveHandler = function (moveEvt) {
-      moveEvt.preventDefault();
-      dragged = true;
+  setupClose.addEventListener('click', function () {
+    window.util.closePopup();
+  });
 
-      var movement = {
-        x: startCoords.x - moveEvt.clientX,
-        y: startCoords.y - moveEvt.clientY
-      };
-
-      startCoords = {
-        x: moveEvt.clientX,
-        y: moveEvt.clientY
-      };
-
-      userDialog.style.top = (userDialog.offsetTop - movement.y) + 'px';
-      userDialog.style.left = (userDialog.offsetLeft - movement.x) + 'px';
-    };
-
-    var dialogHandleMouseUpHandler = function (upEvt) {
-      upEvt.preventDefault();
-      document.removeEventListener('mousemove', dialogHandleMouseMoveHandler);
-      document.removeEventListener('mouseup', dialogHandleMouseUpHandler);
-
-      if (dragged) {
-        var dialogHandleClickPreventDefault = function (dragEvt) {
-          dragEvt.preventDefault();
-          dialogHandle.removeEventListener('click', dialogHandleClickPreventDefault);
-        };
-        dialogHandle.addEventListener('click', dialogHandleClickPreventDefault);
-      }
-    };
-
-    document.addEventListener('mousemove', dialogHandleMouseMoveHandler);
-    document.addEventListener('mouseup', dialogHandleMouseUpHandler);
+  setupClose.addEventListener('keydown', function (evt) {
+    window.util.isEnterEvent(evt, window.util.closePopup);
   });
 })();
