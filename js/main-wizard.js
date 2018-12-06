@@ -11,6 +11,7 @@
   var WIZARD_COAT_COLORS = ['rgb(101, 137, 164)', 'rgb(241, 43, 107)', 'rgb(146, 100, 161)', 'rgb(56, 159, 117)', 'rgb(215, 210, 55)', 'rgb(0, 0, 0)'];
   var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
   var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
+  var MAIN_WIZARD_URL = 'https://js.dump.academy/code-and-magick';
 
   var getRandomColor = function (colors) {
     return colors[Math.floor(colors.length * Math.random())];
@@ -33,6 +34,17 @@
     fireballColor.setAttribute('style', 'background: ' + newFireballColor);
     fireballColorInput.setAttribute('value', newFireballColor);
   };
+
+  var form = window.util.userDialog.querySelector('.setup-wizard-form');
+  form.addEventListener('submit', function (evt) {
+
+    var loadHandler = function () {
+      window.util.userDialog.classList.add('hidden');
+    };
+
+    window.backend.save(MAIN_WIZARD_URL, new FormData(form), loadHandler, window.errorBlock.errorHandler);
+    evt.preventDefault();
+  });
 
   window.mainWizard = {
     getWizardCoatColors: getWizardCoatColors,
