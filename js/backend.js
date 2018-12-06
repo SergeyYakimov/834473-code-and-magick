@@ -6,7 +6,7 @@
     done: 200
   };
 
-  var load = function(url, onLoad, onError) {
+  var load = function (url, onLoad, onError) {
     var xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
 
@@ -45,7 +45,7 @@
     xhr.addEventListener('error', function () {
       onError('Проблема соединения с сетью');
     });
-     xhr.addEventListener('timeout', function () {
+    xhr.addEventListener('timeout', function () {
       onError('Запрос не был выполнен за ' + xhr.timeout + 'мс');
     });
 
