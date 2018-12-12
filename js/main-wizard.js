@@ -12,6 +12,57 @@
   var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
   var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
   var MAIN_WIZARD_URL = 'https://js.dump.academy/code-and-magick';
+  var WIZARDS_URL = 'https://js.dump.academy/code-and-magick/data';
+  var coatColor;
+  var eyesColor;
+  var wizards = [];
+  var wizardChange = {
+    eyesChangeHandler: function (color) {},
+    coatChangeHandler: function (color) {}
+  };
+
+  var getRank = function (wizard) {
+    var rank = 0;
+
+    if (wizard.colorCoat === coatColor) {
+      rank += 2;
+    }
+    if (wizard.colorEyes === eyesColor) {
+      rank += 1;
+    }
+
+    return rank;
+  };
+
+  var namesComparator = function (left, right) {
+    if (left > right) {
+      return 1;
+    } else if (left < right) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
+
+  var updateWizards = function () {
+    window.wizards.drawWizard(wizards.sort(function (left, right) {
+      var rankDiff = getRank(right) - getRank(left);
+      if (rankDiff === 0) {
+        rankDiff = namesComparator(left.name, right.name);
+      }
+      return rankDiff;
+    }));
+  };
+
+  wizardChange.eyesChangeHandler = function (color) {
+    eyesColor = color;
+    updateWizards();
+  };
+
+  wizardChange.coatChangeHandler = function (color) {
+    coatColor = color;
+    updateWizards();
+  };
 
   var getRandomColor = function (colors) {
     return colors[Math.floor(colors.length * Math.random())];
@@ -21,12 +72,14 @@
     var newMainWizardCoat = getRandomColor(WIZARD_COAT_COLORS);
     mainWizardCoat.setAttribute('style', 'fill: ' + newMainWizardCoat);
     mainWizardCoatInput.setAttribute('value', newMainWizardCoat);
+    wizardChange.coatChangeHandler(newMainWizardCoat);
   };
 
   var getWizardEyesColors = function () {
     var newMainWizardEyes = getRandomColor(WIZARD_EYES_COLORS);
     mainWizardEyes.setAttribute('style', 'fill: ' + newMainWizardEyes);
     mainWizardEyesInput.setAttribute('value', newMainWizardEyes);
+    wizardChange.eyesChangeHandler(newMainWizardEyes);
   };
 
   var getWizardFireballColor = function () {
@@ -34,6 +87,13 @@
     fireballColor.setAttribute('style', 'background: ' + newFireballColor);
     fireballColorInput.setAttribute('value', newFireballColor);
   };
+
+  var successHandler = function (data) {
+    wizards = data;
+    updateWizards();
+  };
+
+  window.backend.load(WIZARDS_URL, successHandler, window.errorBlock.errorHandler);
 
   var form = window.util.userDialog.querySelector('.setup-wizard-form');
   form.addEventListener('submit', function (evt) {
