@@ -24,17 +24,8 @@
     }
   };
 
-  var updateWizards = function (wizards, coatColor, eyesColor) {
-    window.wizards.drawWizard(wizards.sort(function (left, right) {
-      var rankDiff = getRank(right, coatColor, eyesColor) - getRank(left, coatColor, eyesColor);
-      if (rankDiff === 0) {
-        rankDiff = namesComparator(left.name, right.name);
-      }
-      return rankDiff;
-    }));
-  };
-
   window.similar = {
-    updateWizards: updateWizards
+    getRank: getRank,
+    namesComparator: namesComparator
   };
 })();

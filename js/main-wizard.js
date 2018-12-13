@@ -21,15 +21,25 @@
     coatChangeHandler: function (color) {}
   };
 
-  wizardChange.eyesChangeHandler = function (color) {
-    eyesColor = color;
-    window.similar.updateWizards(wizards, coatColor, eyesColor);
+  var updateWizards = function () {
+    window.wizards.drawWizard(wizards.sort(function (left, right) {
+      var rankDiff = window.similar.getRank(right, coatColor, eyesColor) - window.similar.getRank(left, coatColor, eyesColor);
+      if (rankDiff === 0) {
+        rankDiff = window.similar.namesComparator(left.name, right.name);
+      }
+      return rankDiff;
+    }));
   };
 
-  wizardChange.coatChangeHandler = function (color) {
+  wizardChange.eyesChangeHandler = window.bounce(function (color) {
+    eyesColor = color;
+    updateWizards();
+  });
+
+  wizardChange.coatChangeHandler = window.bounce(function (color) {
     coatColor = color;
-    window.similar.updateWizards(wizards, coatColor, eyesColor);
-  };
+    updateWizards();
+  });
 
   var getRandomColor = function (colors) {
     return colors[Math.floor(colors.length * Math.random())];
@@ -57,7 +67,7 @@
 
   var successHandler = function (data) {
     wizards = data;
-    window.similar.updateWizards(wizards,coatColor, eyesColor);
+    updateWizards();
   };
 
   window.backend.load(WIZARDS_URL, successHandler, window.errorBlock.errorHandler);
