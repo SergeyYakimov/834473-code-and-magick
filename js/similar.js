@@ -12,7 +12,7 @@
     }
 
     return rank;
-};
+  };
 
   var namesComparator = function (left, right) {
     if (left > right) {
