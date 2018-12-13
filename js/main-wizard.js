@@ -31,12 +31,12 @@
     }));
   };
 
-  wizardChange.eyesChangeHandler = window.debounce( function (color) {
+  wizardChange.eyesChangeHandler = window.debounce(function (color) {
     eyesColor = color;
     updateWizards();
   });
 
-  wizardChange.coatChangeHandler = window.debounce( function (color) {
+  wizardChange.coatChangeHandler = window.debounce(function (color) {
     coatColor = color;
     updateWizards();
   });
