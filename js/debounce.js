@@ -3,7 +3,7 @@
 (function () {
   var DEBOUNCE_INTERVAL = 500;
 
-  window.bounce = function (cb) {
+  window.debounce = function (cb) {
     var lastTimeout = null;
     return function() {
       var parameters = arguments;
