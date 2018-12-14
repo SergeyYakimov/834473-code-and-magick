@@ -1,9 +1,8 @@
 'use strict';
 
 (function () {
-  var WIZARDS_URL = 'https://js.dump.academy/code-and-magick/data';
-  var similarListElement = document.querySelector('.setup-similar-list');
   var similarWizardTemplate = document.querySelector('#similar-wizard-template').content.querySelector('.setup-similar-item');
+  var similarListElement = document.querySelector('.setup-similar-list');
 
   var renderWizard = function (wizard) {
     var wizardElement = similarWizardTemplate.cloneNode(true);
@@ -15,16 +14,20 @@
     return wizardElement;
   };
 
-  var successHandler = function (wizards) {
+  var drawWizard = function (data) {
+    similarListElement.innerHTML = '';
     var fragment = document.createDocumentFragment();
+    var takeNumber = data.length > 4 ? 4 : data.length;
 
-    for (var i = 0; i < 4; i++) {
-      fragment.appendChild(renderWizard(wizards[i]));
+    for (var i = 0; i < takeNumber; i++) {
+      fragment.appendChild(renderWizard(data[i]));
     }
     similarListElement.appendChild(fragment);
 
     window.util.userDialog.querySelector('.setup-similar').classList.remove('hidden');
   };
 
-  window.backend.load(WIZARDS_URL, successHandler, window.errorBlock.errorHandler);
+  window.wizards = {
+    drawWizard: drawWizard
+  };
 })();

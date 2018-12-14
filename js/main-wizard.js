@@ -12,6 +12,34 @@
   var WIZARD_EYES_COLORS = ['black', 'red', 'blue', 'yellow', 'green'];
   var FIREBALL_COLORS = ['#ee4830', '#30a8ee', '#5ce6c0', '#e848d5', '#e6e848'];
   var MAIN_WIZARD_URL = 'https://js.dump.academy/code-and-magick';
+  var WIZARDS_URL = 'https://js.dump.academy/code-and-magick/data';
+  var coatColor;
+  var eyesColor;
+  var wizards = [];
+  var wizardChange = {
+    eyesChangeHandler: function () {},
+    coatChangeHandler: function () {}
+  };
+
+  var updateWizards = function () {
+    window.wizards.drawWizard(wizards.sort(function (left, right) {
+      var rankDiff = window.similar.getRank(right, coatColor, eyesColor) - window.similar.getRank(left, coatColor, eyesColor);
+      if (rankDiff === 0) {
+        rankDiff = window.similar.namesComparator(left.name, right.name);
+      }
+      return rankDiff;
+    }));
+  };
+
+  wizardChange.eyesChangeHandler = window.debounce(function (color) {
+    eyesColor = color;
+    updateWizards();
+  });
+
+  wizardChange.coatChangeHandler = window.debounce(function (color) {
+    coatColor = color;
+    updateWizards();
+  });
 
   var getRandomColor = function (colors) {
     return colors[Math.floor(colors.length * Math.random())];
@@ -21,12 +49,14 @@
     var newMainWizardCoat = getRandomColor(WIZARD_COAT_COLORS);
     mainWizardCoat.setAttribute('style', 'fill: ' + newMainWizardCoat);
     mainWizardCoatInput.setAttribute('value', newMainWizardCoat);
+    wizardChange.coatChangeHandler(newMainWizardCoat);
   };
 
   var getWizardEyesColors = function () {
     var newMainWizardEyes = getRandomColor(WIZARD_EYES_COLORS);
     mainWizardEyes.setAttribute('style', 'fill: ' + newMainWizardEyes);
     mainWizardEyesInput.setAttribute('value', newMainWizardEyes);
+    wizardChange.eyesChangeHandler(newMainWizardEyes);
   };
 
   var getWizardFireballColor = function () {
@@ -34,6 +64,13 @@
     fireballColor.setAttribute('style', 'background: ' + newFireballColor);
     fireballColorInput.setAttribute('value', newFireballColor);
   };
+
+  var successHandler = function (data) {
+    wizards = data;
+    updateWizards();
+  };
+
+  window.backend.load(WIZARDS_URL, successHandler, window.errorBlock.errorHandler);
 
   var form = window.util.userDialog.querySelector('.setup-wizard-form');
   form.addEventListener('submit', function (evt) {
